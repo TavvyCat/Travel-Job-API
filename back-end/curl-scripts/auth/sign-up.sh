@@ -14,8 +14,11 @@ curl "${API}${URL_PATH}" \
       "password_confirmation": "'"${PASS}"'",
       "name": "'"${NAME}"'",
       "phone": "'"${PHONE}"'",
+      "type": "'"${TYPE}"'",
       "occupation": "'"${OCC}"'"
     }
   }'
 
 echo
+
+# EMAIL=test1@test.com PASS=1234 NAME="George" PHONE=384 TYPE=Employee OCC=OT sh back-end/curl-scripts/auth/sign-up.sh

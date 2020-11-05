@@ -1,11 +1,19 @@
 const mongoose = require('mongoose')
 
-const exampleSchema = new mongoose.Schema({
-  title: {
+const jobSchema = new mongoose.Schema({
+  occupation: {
     type: String,
     required: true
   },
-  text: {
+  pay: {
+    type: Number,
+    required: true
+  },
+  location: {
+    type: String,
+    required: true
+  },
+  description: {
     type: String,
     required: true
   },
@@ -18,4 +26,4 @@ const exampleSchema = new mongoose.Schema({
   timestamps: true
 })
 
-module.exports = mongoose.model('Example', exampleSchema)
+module.exports = mongoose.model('Job', jobSchema)
