@@ -10,11 +10,11 @@ curl "${API}${URL_PATH}" \
   --data '{
     "user": {
       "email": "'"${EMAIL}"'",
-      "password": "'"${PASSWORD}"'",
-      "password_confirmation": "'"${PASSWORD}"'",
+      "password": "'"${PASS}"'",
+      "password_confirmation": "'"${PASS}"'",
       "name": "'"${NAME}"'",
       "phone": "'"${PHONE}"'",
-      "resume": "'"${RESUME}"'"
+      "occupation": "'"${OCC}"'"
     }
   }'
 
