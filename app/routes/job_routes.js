@@ -17,7 +17,7 @@ const router = express.Router()
 
 router.route('/jobs')
   // INDEX
-  .get((req, res, next) => {
+  .get(requireToken, (req, res, next) => {
     Job.find()
       .populate('owner')
       .then(jobs => jobs.map(job => job.toObject()))
@@ -30,36 +30,30 @@ router.route('/jobs')
     job.owner = req.user.id
   
     Job.create(job)
-      .then(job => res.status(201).json({ job: job.toObject() }))
+      .then(job => res.status(201).json({ job }))
       .catch(next)
   })
 
 router.route('/jobs/:id')
   // SHOW
-  .get(requireToken, (req, res, next) => {
-    // req.params.id will be set based on the `:id` in the route
+  .get((req, res, next) => {
     Job.findById(req.params.id)
       .then(handle404)
-      .populate('owner')
-      // if `findById` is succesful, respond with 200 and "job" JSON
-      .then(job => res.status(200).json({ job: job.toObject() }))
-      // if an error occurs, pass it to the handler
+      // .populate('owner')
+      .then(job => res.status(200).json({ job }))
       .catch(next)
   })
   // UPDATE
   .patch(requireToken, removeBlanks, (req, res, next) => {
-    // if the client attempts to change the `owner` property by including a new
-    // owner, prevent that by deleting that key/value pair
+    // prevents changing owner and _id
     delete req.body.job.owner
+    delete req.body.job._id
   
     Job.findById(req.params.id)
       .then(handle404)
       .then(job => {
-        // pass the `req` object and the Mongoose record to `requireOwnership`
-        // it will throw an error if the current user isn't the owner
         requireOwnership(req, job)
   
-        // pass the result of Mongoose's `.update` to the next `.then`
         return job.updateOne(req.body.job)
       })
       // if that succeeded, return 204 and no JSON
@@ -74,12 +68,9 @@ router.route('/jobs/:id')
       .then(job => {
         // throw an error if current user doesn't own `job`
         requireOwnership(req, job)
-        // delete the job ONLY IF the above didn't throw
         job.deleteOne()
       })
-      // send back 204 and no content if the deletion succeeded
       .then(() => res.sendStatus(204))
-      // if an error occurs, pass it to the handler
       .catch(next)
   })
 

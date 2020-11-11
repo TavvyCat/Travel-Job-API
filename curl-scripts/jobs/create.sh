@@ -11,6 +11,7 @@ curl "${API}${URL_PATH}" \
   --data '{
     "job": {
       "occupation": "'"${OCC}"'",
+      "type": "'"${TYPE}"'",
       "pay": "'"${PAY}"'",
       "location": "'"${LOC}"'",
       "description": "'"${DESC}"'"

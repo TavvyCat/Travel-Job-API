@@ -4,7 +4,7 @@ const passport = require('passport')
 const bcrypt = require('bcrypt')
 
 const User = require('../models/user')
-const { BadParamsError, BadCredentialsError } = require('../../lib/custom_errors')
+const { BadParamsError, BadCredentialsError, handle404 } = require('../../lib/custom_errors')
 const removeBlanks = require('../../lib/remove_blank_fields')
 
 const bcryptSaltRounds = 10
@@ -99,7 +99,7 @@ router.patch('/change-password', requireToken, (req, res, next) => {
     .catch(next)
 })
 
-// 
+// SIGN OUT
 router.delete('/sign-out', requireToken, (req, res, next) => {
   // create a new random token for the user, invalidating the current one
   req.user.token = crypto.randomBytes(16)
@@ -108,12 +108,30 @@ router.delete('/sign-out', requireToken, (req, res, next) => {
     .catch(next)
 })
 
+// GET USERS
 router.get('/users', (req, res, next) => {
   User.find()
     .then(users => {
 
       res.json({ users })
     })
+    .catch(next)
+})
+
+// UPDATE USER
+router.patch('/users/:id', requireToken, removeBlanks, (req, res, next) => {
+  const id = { _id: req.params.id}
+  const options = { new: true }
+  User.findOneAndUpdate(id, req.body.user, options)
+    .then(handle404)
+    .then(user => res.json({ user }))
+    .catch(next)
+})
+// SHOW USER
+router.get('/users/:id', (req, res, next) => {
+  User.findOne({ _id: req.params.id })
+    .then(handle404)
+    .then(user => res.json({ user }))
     .catch(next)
 })
 

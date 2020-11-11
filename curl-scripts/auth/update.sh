@@ -1,17 +1,16 @@
-#!/bin/bash
+#!/bin/sh
 
 API="http://localhost:4741"
-URL_PATH="/sign-up"
+URL_PATH="/users/"
 
-curl "${API}${URL_PATH}" \
+curl "${API}${URL_PATH}${ID}" \
   --include \
-  --request POST \
+  --request PATCH \
   --header "Content-Type: application/json" \
+  --header "Authorization: Bearer ${TOKEN}" \
   --data '{
     "user": {
       "email": "'"${EMAIL}"'",
-      "password": "'"${PASS}"'",
-      "password_confirmation": "'"${PASS}"'",
       "name": "'"${NAME}"'",
       "phone": "'"${PHONE}"'",
       "type": "'"${TYPE}"'",
@@ -20,5 +19,3 @@ curl "${API}${URL_PATH}" \
   }'
 
 echo
-
-# EMAIL=test1@test.com PASS=1234 NAME="George" PHONE=384 TYPE=Employee OCC=OT sh curl-scripts/auth/sign-up.sh
