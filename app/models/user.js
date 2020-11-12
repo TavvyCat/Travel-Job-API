@@ -16,7 +16,8 @@ const userSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    required: true
+    required: true,
+    enum: ['Employer', 'Employee']
   },
   phone: String,
   occupation: String,
