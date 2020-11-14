@@ -28,7 +28,7 @@ router.route('/jobs')
   .post(requireToken, (req, res, next) => {
     const job = req.body.job
     job.owner = req.user.id
-  
+
     Job.create(job)
       .then(job => res.status(201).json({ job }))
       .catch(next)
@@ -48,12 +48,16 @@ router.route('/jobs/:id')
     // prevents changing owner and _id
     delete req.body.job.owner
     delete req.body.job._id
-  
+
     Job.findById(req.params.id)
       .then(handle404)
       .then(job => {
         requireOwnership(req, job)
-  
+        // if (req.body.applied) {
+        //   job.applied.push(req.body.applied)
+        //   job.save()
+        // }
+
         return job.updateOne(req.body.job)
       })
       // if that succeeded, return 204 and no JSON
